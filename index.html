@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Message from Aegis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --choco-dark: #3e2723;
+            --choco-mid: #5d4037;
+            --valent-pink: #ff80ab;
+            --valent-deep: #d81b60;
+            --bg-color: #fff5f7;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Gowun Batang', serif;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* 공통 애니메이션 섹션 */
+        .screen {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .hidden { display: none !important; opacity: 0; transform: translateY(20px); }
+
+        /* 1. 가짜 로딩 화면 */
+        #loading-screen { background: #fff; z-index: 1000; }
+        .logo { width: 140px; margin-bottom: 20px; }
+        .progress-container {
+            width: 250px; height: 16px;
+            background: #eee; border-radius: 10px;
+            border: 3px solid var(--choco-dark); overflow: hidden;
+        }
+        .progress-bar { width: 0%; height: 100%; background: var(--choco-mid); }
+
+        /* 2. 닉네임 입력 화면 */
+        .input-box {
+            background: white; padding: 40px; border-radius: 30px;
+            box-shadow: 0 10px 0 #f0d0d8; text-align: center;
+            border: 3px solid var(--valent-pink);
+        }
+        input[type="text"] {
+            padding: 15px; width: 200px; font-size: 1.2rem;
+            border: 2px solid #ddd; border-radius: 15px;
+            margin: 20px 0; outline: none; text-align: center;
+            font-family: 'Gowun Batang';
+        }
+
+        /* 3. 게임 스타일 3D 버튼 */
+        .btn-game {
+            padding: 15px 35px; font-size: 1.1rem; font-weight: bold;
+            color: white; background: var(--valent-pink);
+            border: none; border-radius: 50px;
+            box-shadow: 0 6px var(--valent-deep);
+            cursor: pointer; transition: 0.1s;
+        }
+        .btn-game:active { transform: translateY(4px); box-shadow: 0 2px var(--valent-deep); }
+        .btn-game:hover { filter: brightness(1.05); }
+
+        /* 4. 결과 화면 전용 */
+        .envelope-container { position: relative; width: 320px; height: 380px; }
+        .envelope-img { width: 100%; transition: 0.5s ease; }
+
+        #letter-paper {
+            display: none; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+            width: 280px; min-height: 380px;
+            background: #fff; padding: 25px; border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background-image: repeating-linear-gradient(#fff, #fff 31px, #f0f0f0 32px);
+            font-family: 'Nanum Pen Script', cursive; font-size: 1.6rem;
+            line-height: 32px; z-index: 10; opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #letter-paper.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        
+        .char-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--valent-pink); }
+
+        @keyframes sparkle {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.5) drop-shadow(0 0 10px #fff); }
+            100% { filter: brightness(1); }
+        }
+        .animate-sparkle { animation: sparkle 0.6s ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen" class="screen">
+        <img src="logo.png" alt="Logo" class="logo">
+        <div style="color: var(--choco-dark); margin-bottom: 15px; font-weight: bold;">
+            아이기스에 초콜릿 새가 편지를 운반 중입니다 . . .
+        </div>
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+    </div>
+
+    <div id="name-screen" class="screen hidden">
+        <div class="input-box">
+            <img src="logo.png" style="width: 80px; margin-bottom: 10px;">
+            <h2 style="color: var(--choco-dark); margin: 0;">당신의 이름은 무엇인가요?</h2>
+            <input type="text" id="user-name" placeholder="닉네임 입력" maxlength="8">
+            <br>
+            <button class="btn-game" onclick="goToDraw()">입력 완료</button>
+        </div>
+    </div>
+
+    <div id="draw-screen" class="screen hidden">
+        <h1 id="welcome-msg" style="color: var(--choco-dark);"></h1>
+        <p>오늘 당신에게 도착한 특별한 운세를 확인해보세요!</p>
+        <button class="btn-game" onclick="startDraw()">편지 받기 시작!</button>
+    </div>
+
+    <div id="result-screen" class="screen hidden">
+        <div class="envelope-container">
+            <img id="envelope-img" src="" class="envelope-img">
+            <div id="letter-paper">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                    <img id="char-thumb" src="" class="char-img">
+                    <span id="char-from" style="font-weight: bold; color: var(--valent-deep);"></span>
+                </div>
+                <div id="letter-to" style="font-weight: bold; font-size: 1.3rem; color: #555;"></div>
+                <div id="letter-text"></div>
+            </div>
+        </div>
+        <button id="open-btn" class="btn-game" onclick="animateOpen()">편지를 열어봐요!</button>
+        <button id="retry-btn" class="btn-game hidden" onclick="location.reload()" style="background: var(--choco-mid); box-shadow: 0 6px var(--choco-dark); margin-top: 20px;">다시 하기</button>
+    </div>
+
+    <script>
+        // --- 데이터 설정 ---
+        const characters = [
+            { name: "레오", type: "fire", text: "날이 춥네. 너랑 같이 먹으려고 초콜릿을 좀 준비했어. 절대 네 생각 나서 산 건 아니야!", img: "char1.png" },
+            { name: "미나", type: "water", text: "오늘따라 당신이 보고 싶었어요. 제 마음이 담긴 편지를 받아주시겠어요?", img: "char2.png" },
+            // ... 총 24명 데이터 추가
+        ];
+
+        const envelopes = {
+            fire: { closed: "env_fire_close.png", open: "env_fire_open.png" },
+            water: { closed: "env_water_close.png", open: "env_water_open.png" },
+            // ... 7가지 속성 이미지 매칭
+        };
+
+        let userName = "";
+        let selectedChar = null;
+
+        // --- 흐름 제어 ---
+
+        // 1. 로딩 로직
+        window.onload = () => {
+            let width = 0;
+            const bar = document.getElementById('progress-bar');
+            const interval = setInterval(() => {
+                width += Math.random() * 8;
+                if (width >= 100) {
+                    bar.style.width = '100%';
+                    clearInterval(interval);
+                    setTimeout(() => transition('loading-screen', 'name-screen'), 600);
+                } else {
+                    bar.style.width = width + '%';
+                }
+            }, 150);
+        };
+
+        // 2. 닉네임 입력 완료 -> 뽑기 메인
+        function goToDraw() {
+            userName = document.getElementById('user-name').value.trim();
+            if (!userName) {
+                alert("이름을 입력해주세요!");
+                return;
+            }
+            document.getElementById('welcome-msg').innerText = `${userName}님, 환영합니다!`;
+            transition('name-screen', 'draw-screen');
+        }
+
+        // 3. 뽑기 시작 -> 봉투 등장
+        function startDraw() {
+            const idx = Math.floor(Math.random() * characters.length);
+            selectedChar = characters[idx];
+            
+            const envData = envelopes[selectedChar.type] || { closed: 'default_close.png', open: 'default_open.png' };
+            document.getElementById('envelope-img').src = envData.closed;
+            
+            transition('draw-screen', 'result-screen');
+        }
+
+        // 4. 편지 열기 애니메이션
+        function animateOpen() {
+            const btn = document.getElementById('open-btn');
+            const envImg = document.getElementById('envelope-img');
+            const paper = document.getElementById('letter-paper');
+
+            btn.classList.add('animate-sparkle');
+            
+            setTimeout(() => {
+                const envData = envelopes[selectedChar.type];
+                envImg.src = envData.open;
+                envImg.style.transform = 'translateY(40px) scale(0.8)';
+                envImg.style.opacity = '0.3';
+
+                // 편지 내용 세팅 (사용자 이름 포함)
+                document.getElementById('char-thumb').src = selectedChar.img;
+                document.getElementById('char-from').innerText = `From. ${selectedChar.name}`;
+                document.getElementById('letter-to').innerText = `To. ${userName}에게`;
+                document.getElementById('letter-text').innerText = selectedChar.text;
+                
+                paper.classList.add('show');
+                btn.classList.add('hidden');
+                document.getElementById('retry-btn').classList.remove('hidden');
+            }, 600);
+        }
+
+        // 화면 전환 함수
+        function transition(fromId, toId) {
+            const from = document.getElementById(fromId);
+            const to = document.getElementById(toId);
+            
+            from.style.opacity = '0';
+            setTimeout(() => {
+                from.classList.add('hidden');
+                to.classList.remove('hidden');
+                setTimeout(() => to.style.opacity = '1', 50);
+            }, 800);
+        }
+    </script>
+</body>
+</html>
