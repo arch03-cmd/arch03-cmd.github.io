@@ -80,6 +80,7 @@
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             white-space: pre-line;
         }
+        #letter-paper.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         /* 모바일용 */
         @media (max-width: 768px) {
         #letter-paper {
@@ -87,8 +88,8 @@
         max-width: 320px;
         padding: 20px;
         font-size: 1.3rem;
+        }
     }
-        #letter-paper.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         
         .char-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--valent-pink); object-fit: cover; }
 
@@ -276,6 +277,7 @@ const envelopes = {
 
 </body>
 </html>
+
 
 
 
