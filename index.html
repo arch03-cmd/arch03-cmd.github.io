@@ -527,25 +527,17 @@ ${userName}, 나는 앞으로도 네 곁에 있고 싶어. 네가 전장에서 �
             // 하모니 코어
         ];
 
-        const envelopes = {
-            // 불
-            Pyre: { closed: "env_Pyre_close.png", open: "env_Pyre_open.png" },
-            // 물
-            Aqua: { closed: "env_Aqua_close.png", open: "env_Aqua_open.png" },
-            // 풀
-            Verde: { closed: "env_Verde_close.png", open: "env_Verde_open.png" },
-            // 번개
-            Fulmen: { closed: "env_Fulmen_close.png", open: "env_Fulmen_open.png" },
-            // 바람
-            Aero: { closed: "env_Aero_close.png", open: "env_Aero_open.png" },
-            //얼음
-            Glacies: { closed: "env_Glacies_close.png", open: "env_Glacies_open.png" },
-            // 무
-            None: { closed: "env_None_close.png", open: "env_None_open.png" },
-        };
+const envelopes = {
+        Aqua: { closed: "env_aqua_close.png", open: "env_aqua_open.png" },
+        Aero: { closed: "env_aero_close.png", open: "env_aero_open.png" },
+        Pyre: { closed: "env_pyre_close.png", open: "env_pyre_open.png" },
+        Glacies: { closed: "env_glacies_close.png", open: "env_glacies_open.png" },
+        Fulmen: { closed: "env_fulmen_close.png", open: "env_fulmen_open.png" },
+        Verde: { closed: "env_verde_close.png", open: "env_verde_open.png" }
+    };
 
-        let userName = "";
-        let selectedChar = null;
+    let userName = "";
+    let selectedChar = null;
 
 // --- 흐름 제어 ---
 
@@ -627,3 +619,4 @@ ${userName}, 나는 앞으로도 네 곁에 있고 싶어. 네가 전장에서 �
         }, 800);
     }
 </script>
+
