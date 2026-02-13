@@ -70,18 +70,24 @@
         #letter-paper {
             display: none; position: absolute;
             top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
-            width: 90%; max-width: 1200px;
-            max-height: 700px; overflow-y: auto;
-            background: #fff; padding: 30px; border-radius: 5px;
+            width: 95%;
+            max-width: 900px;  
+            max-height: 550px;
+            overflow-y: auto;
+            background: #fff; 
+            padding: 40px; 
+            border-radius: 5px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             background-image: repeating-linear-gradient(#fff, #fff 31px, #f0f0f0 32px);
-            font-family: 'Noto Sans KR', sans-serif; font-size: 1.6rem;
-            line-height: 32px; z-index: 10; opacity: 0;
+            font-family: 'Noto Sans KR', sans-serif; 
+            font-size: 1.4rem; 
+            line-height: 2;  
+            z-index: 10; opacity: 0;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             white-space: pre-line;
         }
         #letter-paper.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        /* 모바일용 */
+        // 모바일용
         @media (max-width: 768px) {
         #letter-paper {
         width: 85%;
@@ -247,6 +253,20 @@ const envelopes = {
                 envImg.src = envData.open;
                 envImg.style.transform = 'translateY(40px) scale(0.8)';
                 envImg.style.opacity = '0.3';
+    
+                setTimeout(() => {
+                    let personalizedText = selectedChar.text.replace(/\$\{userName\}/g, userName);
+        
+                    document.getElementById('char-thumb').src = selectedChar.img;
+                    document.getElementById('char-from').innerText = 'From. ' + selectedChar.name;
+                    document.getElementById('letter-to').innerText = 'To. ' + userName + '에게';
+                    document.getElementById('letter-text').innerText = personalizedText;
+                    
+                    paper.classList.add('show');
+                    btn.classList.add('hidden');
+                    document.getElementById('retry-btn').classList.remove('hidden');
+                        }, 1700); 
+            }, 600);
 
                 // ⭐ 닉네임 치환 (문자열에서 ${userName}을 실제 이름으로 교체)
                 let personalizedText = selectedChar.text.replace(/\$\{userName\}/g, userName);
@@ -277,6 +297,7 @@ const envelopes = {
 
 </body>
 </html>
+
 
 
 
