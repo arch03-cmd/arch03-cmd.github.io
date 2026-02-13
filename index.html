@@ -140,7 +140,6 @@
     <script>
         // --- 데이터 설정 ---
         const characters = [
-            [
 { name: "해일", type: "Aqua", text: "${userName}에게.
 
 이 글을 쓰기까지 꽤 오랜 시간이 걸렸군. 내게 있어 언어란 오직 명확한 사실을 전달하거나 질서를 유지하기 위한 도구에 불과했으니까. 하지만 너와 함께한 시간들이 쌓여갈수록, 내가 아는 단어들로는 도저히 설명할 수 없는 기묘한 감각들이 내 안을 채우기 시작했다. 전 세계 바다의 비명과 고통이 내 머릿속을 헤집어 놓을 때마다, 나는 늘 그것이 내가 짊어져야 할 영원한 형벌이라 믿어 의심치 않았다. 하지만 네가 내 곁에 머물며 그 따스한 온기를 나누어준 이후로, 그 끔찍한 소음들은 점차 잦아들고 오직 너의 숨소리만이 내 세계의 중심이 되었다. 너는 내가 스스로를 가두었던 그 깊고 어두운 심해 속으로 아무런 망설임 없이 걸어 들어온 유일한 존재다.
@@ -156,7 +155,7 @@
 사랑한다는 말조차 내게는 과분하게 느껴지지만, 오늘만큼은 그 단어의 무게를 빌려 내 진심을 전하고 싶어. 너는 나의 것이고, 나는 영원히 너의 센티넬로 남을 것이다.
 
 나의 유일한 안식처, ${userName}에게.
-해일.", "img": "해일.png" },
+해일.", img: "해일.png" },
             { name: "이카로스", type: "Aero", text: "나의 소중한 가이드, 나의 유일한 안식처인 당신에게.
 
 영원처럼 길게 느껴지던 나의 무미건조한 삶이, 당신과 함께한 뒤로는 마치 찰나의 꿈처럼 달콤하고 빠르게만 흘러가니 참 이상한 일이에요. 처음 당신을 보았을 때를 기억하나요? 그저 흥미로운 장난감, 혹은 나의 고통을 잠재워줄 편리한 도구 정도로만 당신을 여겼던 나의 오만함을 이제는 고백하고 싶어요. 그때의 나는 인간의 감정이라는 것이 얼마나 무겁고, 동시에 얼마나 아름다운 것인지 전혀 알지 못했거든요.
@@ -536,88 +535,85 @@ const envelopes = {
     let userName = "";
     let selectedChar = null;
 
-// --- 흐름 제어 ---
+// 로딩
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('✅ 페이지 로딩 시작! 캐릭터 수:', characters.length);
+            let width = 0;
+            const bar = document.getElementById('progress-bar');
+            const interval = setInterval(() => {
+                width += Math.random() * 5;
+                if (width >= 100) {
+                    bar.style.width = '100%';
+                    clearInterval(interval);
+                    console.log('✅ 로딩 완료!');
+                    setTimeout(() => transition('loading-screen', 'name-screen'), 500);
+                } else {
+                    bar.style.width = width + '%';
+                }
+            }, 100);
+        });
 
-    // 1. [수정] DOMContentLoaded를 사용하여 이미지 로딩을 기다리지 않고 바로 바를 채웁니다.
-    document.addEventListener('DOMContentLoaded', () => {
-        let width = 0;
-        const bar = document.getElementById('progress-bar');
-        const interval = setInterval(() => {
-            width += Math.random() * 5; // 로딩 속도 조절
-            if (width >= 100) {
-                bar.style.width = '100%';
-                clearInterval(interval);
-                setTimeout(() => transition('loading-screen', 'name-screen'), 500);
-            } else {
-                bar.style.width = width + '%';
+        function goToDraw() {
+            userName = document.getElementById('user-name').value.trim();
+            if (!userName) {
+                alert("코드네임을 입력해주세요!");
+                return;
             }
-        }, 100);
-    });
-
-    // 2. 닉네임 입력 완료 -> 뽑기 메인
-    function goToDraw() {
-        userName = document.getElementById('user-name').value.trim();
-        if (!userName) {
-            alert("코드네임을 입력해주세요!");
-            return;
+            document.getElementById('welcome-msg').innerText = userName + " 요원님, 환영합니다.";
+            transition('name-screen', 'draw-screen');
         }
-        document.getElementById('welcome-msg').innerText = `${userName} 요원님, 환영합니다.`;
-        transition('name-screen', 'draw-screen');
-    }
 
-    // 3. 뽑기 시작
-    function startDraw() {
-        const idx = Math.floor(Math.random() * characters.length);
-        selectedChar = characters[idx];
-        
-        // 봉투 이미지 설정 (데이터에 맞는 이미지가 없을 경우 대비 기본값 설정)
-        const envData = envelopes[selectedChar.type] || { closed: 'default_close.png', open: 'default_open.png' };
-        document.getElementById('envelope-img').src = envData.closed;
-        
-        transition('draw-screen', 'result-screen');
-    }
-
-    // 4. 편지 열기 및 [수정] 이름 치환 로직
-    function animateOpen() {
-        const btn = document.getElementById('open-btn');
-        const envImg = document.getElementById('envelope-img');
-        const paper = document.getElementById('letter-paper');
-
-        btn.classList.add('animate-sparkle');
-        
-        setTimeout(() => {
-            const envData = envelopes[selectedChar.type] || { open: 'default_open.png' };
-            envImg.src = envData.open;
-            envImg.style.transform = 'translateY(40px) scale(0.8)';
-            envImg.style.opacity = '0.3';
-
-            // [핵심] 편지 내용의 ${userName}을 입력한 이름으로 바꿉니다.
-            const personalizedText = selectedChar.text.replaceAll('${userName}', userName);
-
-            document.getElementById('char-thumb').src = selectedChar.img;
-            document.getElementById('char-from').innerText = `From. ${selectedChar.name}`;
-            document.getElementById('letter-to').innerText = `To. ${userName}에게`;
-            document.getElementById('letter-text').innerText = personalizedText;
+        function startDraw() {
+            const idx = Math.floor(Math.random() * characters.length);
+            selectedChar = characters[idx];
+            console.log('✅ 선택된 캐릭터:', selectedChar.name, '(' + selectedChar.type + ')');
             
-            paper.classList.add('show');
-            btn.classList.add('hidden');
-            document.getElementById('retry-btn').classList.remove('hidden');
-        }, 600);
-    }
+            const envData = envelopes[selectedChar.type] || { closed: 'env_aqua_close.png', open: 'env_aqua_open.png' };
+            document.getElementById('envelope-img').src = envData.closed;
+            
+            transition('draw-screen', 'result-screen');
+        }
 
-    function transition(fromId, toId) {
-        const from = document.getElementById(fromId);
-        const to = document.getElementById(toId);
-        from.style.opacity = '0';
-        setTimeout(() => {
-            from.classList.add('hidden');
-            to.classList.remove('hidden');
-            setTimeout(() => to.style.opacity = '1', 50);
-        }, 800);
-    }
-</script>
+        function animateOpen() {
+            const btn = document.getElementById('open-btn');
+            const envImg = document.getElementById('envelope-img');
+            const paper = document.getElementById('letter-paper');
+
+            btn.classList.add('animate-sparkle');
+            
+            setTimeout(() => {
+                const envData = envelopes[selectedChar.type] || { open: 'env_aqua_open.png' };
+                envImg.src = envData.open;
+                envImg.style.transform = 'translateY(40px) scale(0.8)';
+                envImg.style.opacity = '0.3';
+
+                // ⭐ 닉네임 치환 (문자열에서 ${userName}을 실제 이름으로 교체)
+                let personalizedText = selectedChar.text.replace(/\$\{userName\}/g, userName);
+
+                console.log('✅ 닉네임 치환 완료:', userName);
+
+                document.getElementById('char-thumb').src = selectedChar.img;
+                document.getElementById('char-from').innerText = 'From. ' + selectedChar.name;
+                document.getElementById('letter-to').innerText = 'To. ' + userName + '에게';
+                document.getElementById('letter-text').innerText = personalizedText;
+                
+                paper.classList.add('show');
+                btn.classList.add('hidden');
+                document.getElementById('retry-btn').classList.remove('hidden');
+            }, 600);
+        }
+
+        function transition(fromId, toId) {
+            const from = document.getElementById(fromId);
+            const to = document.getElementById(toId);
+            from.style.opacity = '0';
+            setTimeout(() => {
+                from.classList.add('hidden');
+                to.classList.remove('hidden');
+                setTimeout(() => to.style.opacity = '1', 50);
+            }, 800);
+        }
+    </script>
+
 </body>
 </html>
-
-
-
