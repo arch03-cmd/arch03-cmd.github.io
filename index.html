@@ -158,26 +158,18 @@
         .char-card-wrapper {
             position: relative;
             width: 100%;
+            height: 140px;
             margin-bottom: 10px;
-        }
-
-        .envelope-thumb {
-            width: 100%;
-            height: 120px;
-            object-fit: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .char-portrait {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border-radius: 10px;
         }
 
         .char-item p {
@@ -424,10 +416,8 @@
                     div.onclick = () => showLetter(char);
                     div.innerHTML = `
                         <div class="char-card-wrapper">
-                            <img src="${envelopes[type]}" class="envelope-thumb" alt="편지" 
-                                 onerror="this.src='https://via.placeholder.com/100x120?text=💌'">
                             <img src="${char.img}" class="char-portrait" alt="${char.name}"
-                                 onerror="this.src='https://via.placeholder.com/60?text=${char.name[0]}'">
+                                 onerror="this.src='https://via.placeholder.com/160x140?text=${char.name}'">
                         </div>
                         <p>${char.name}</p>
                     `;
