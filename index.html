@@ -70,8 +70,9 @@
         #letter-paper {
             display: none; position: absolute;
             top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
-            width: 280px; max-height: 400px; overflow-y: auto;
-            background: #fff; padding: 25px; border-radius: 5px;
+            width: 90%; max-width: 1200px;
+            max-height: 700px; overflow-y: auto;
+            background: #fff; padding: 30px; border-radius: 5px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             background-image: repeating-linear-gradient(#fff, #fff 31px, #f0f0f0 32px);
             font-family: 'Nanum Pen Script', cursive; font-size: 1.6rem;
@@ -79,6 +80,14 @@
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             white-space: pre-line;
         }
+        /* 모바일용 */
+        @media (max-width: 768px) {
+        #letter-paper {
+        width: 85%;
+        max-width: 320px;
+        padding: 20px;
+        font-size: 1.3rem;
+    }
         #letter-paper.show { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
         
         .char-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--valent-pink); object-fit: cover; }
@@ -134,7 +143,7 @@
             </div>
         </div>
         <button id="open-btn" class="btn-game" onclick="animateOpen()">편지를 열어봐요!</button>
-        <button id="retry-btn" class="btn-game hidden" onclick="location.reload()" style="background: var(--choco-mid); box-shadow: 0 6px var(--choco-dark); margin-top: 20px;">새로운 편지 받아보기</button>
+        <button id="retry-btn" class="btn-game hidden" onclick="location.reload()" style="background: var(--choco-mid); box-shadow: 0 6px var(--choco-dark); margin-top: 35px; margin-bottom: 20px;">새로운 편지 받아보기</button>
     </div>
 
    <script>
@@ -177,12 +186,12 @@
             ];
     
 const envelopes = {
-        Aqua: { closed: "env_aqua_close.png", open: "env_aqua_open.png" },
-        Aero: { closed: "env_aero_close.png", open: "env_aero_open.png" },
-        Pyre: { closed: "env_pyre_close.png", open: "env_pyre_open.png" },
-        Glacies: { closed: "env_glacies_close.png", open: "env_glacies_open.png" },
-        Fulmen: { closed: "env_fulmen_close.png", open: "env_fulmen_open.png" },
-        Verde: { closed: "env_verde_close.png", open: "env_verde_open.png" }
+        Aqua: { closed: "env_Aqua_close.png", open: "env_aqua_open.png" },
+        Aero: { closed: "env_Aero_close.png", open: "env_aero_open.png" },
+        Pyre: { closed: "env_Pyre_close.png", open: "env_pyre_open.png" },
+        Glacies: { closed: "env_Glacies_close.png", open: "env_glacies_open.png" },
+        Fulmen: { closed: "env_Fulmen_close.png", open: "env_fulmen_open.png" },
+        Verde: { closed: "env_Verde_close.png", open: "env_verde_open.png" }
     };
 
 
@@ -268,6 +277,7 @@ const envelopes = {
 
 </body>
 </html>
+
 
 
 
