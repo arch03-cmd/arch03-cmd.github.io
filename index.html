@@ -137,8 +137,11 @@
         <button id="retry-btn" class="btn-game hidden" onclick="location.reload()" style="background: var(--choco-mid); box-shadow: 0 6px var(--choco-dark); margin-top: 20px;">새로운 편지 받아보기</button>
     </div>
 
-    <script>
-        // --- 데이터 설정 ---
+   <script>
+        let userName = "";
+        let selectedChar = null;
+
+        // 캐릭터 데이터
         const characters = [
 { name: "해일", type: "Aqua", text: "${userName}에게.
 
@@ -617,3 +620,4 @@ const envelopes = {
 
 </body>
 </html>
+
