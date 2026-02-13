@@ -68,40 +68,43 @@
         .envelope-img { width: 100%; transition: 0.5s ease; }
 
         #letter-paper {
-            display: none; position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
             width: 90%;
             max-width: 900px;
             max-height: 600px;
             overflow-y: auto;
-            background: #fff; 
+            background: #fff;
             padding: 40px;
             border-radius: 5px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             background-image: repeating-linear-gradient(#fff, #fff 31px, #f0f0f0 32px);
-            font-family: 'Noto Sans KR', sans-serif; 
+            font-family: 'Noto Sans KR', sans-serif;
             font-size: 1.4rem;
             line-height: 1.8;
-            z-index: 10; 
+            z-index: 10;
             opacity: 0;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             white-space: pre-line;
         }
         
-        #letter-paper.show { 
-            display: block; 
-            opacity: 1; 
-            transform: translate(-50%, -50%) scale(1); 
+        #letter-paper.show {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
         
-        // 모바일용 - 768px 이하일 때만 적용
+        /* 모바일용 */
         @media (max-width: 768px) {
             #letter-paper {
                 width: 85% !important;
                 max-width: 320px !important;
                 padding: 20px !important;
                 font-size: 1.3rem !important;
-                max-height: 70vh !important; 
+                max-height: 70vh !important;
             }
         }
         
@@ -297,6 +300,7 @@ const envelopes = {
 
 </body>
 </html>
+
 
 
 
